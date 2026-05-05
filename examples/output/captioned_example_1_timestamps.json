@@ -1,0 +1,52 @@
+[
+  {
+    "word": "Hello",
+    "start_time": 0.022875000000000034,
+    "end_time": 0.372875
+  },
+  {
+    "word": "world",
+    "start_time": 0.372875,
+    "end_time": 0.897875
+  },
+  {
+    "word": "!",
+    "start_time": 0.897875,
+    "end_time": 1.0353750000000002
+  },
+  {
+    "word": "Welcome",
+    "start_time": 1.0353750000000002,
+    "end_time": 1.497875
+  },
+  {
+    "word": "to",
+    "start_time": 1.497875,
+    "end_time": 1.585375
+  },
+  {
+    "word": "the",
+    "start_time": 1.585375,
+    "end_time": 1.6728750000000001
+  },
+  {
+    "word": "captioned",
+    "start_time": 1.6728750000000001,
+    "end_time": 2.122875
+  },
+  {
+    "word": "speech",
+    "start_time": 2.122875,
+    "end_time": 2.4478750000000002
+  },
+  {
+    "word": "system",
+    "start_time": 2.4478750000000002,
+    "end_time": 3.122875
+  },
+  {
+    "word": ".",
+    "start_time": 3.122875,
+    "end_time": 3.272875
+  }
+]

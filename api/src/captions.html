@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastKoko Captions - Level Up TTS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="styles/base.css">
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #eee;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            z-index: 1;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #2196F3;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(33, 150, 243, 0.3);
+        }
+        .caption-container {
+            margin-top: 2rem;
+            padding: 2.5rem;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 250px;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            color: #666;
+            white-space: pre-wrap;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .word {
+            display: inline-block;
+            margin-right: 0.4rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .word.active {
+            background: #2196F3;
+            color: white;
+            box-shadow: 0 0 20px rgba(33, 150, 243, 0.6);
+            transform: scale(1.15) translateY(-2px);
+            z-index: 2;
+        }
+        #text-input {
+            width: 100%;
+            height: 150px;
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1.2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        #text-input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        .controls-row {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+        }
+        select, input[type="range"] {
+            background: #1a1a1a;
+            color: white;
+            border: 1px solid #333;
+            padding: 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            margin-left: auto;
+        }
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+        .generate-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        audio {
+            width: 100%;
+            margin-top: 1rem;
+            filter: invert(100%) hue-rotate(180deg) brightness(1.5);
+        }
+        .status-msg {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #2196F3;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0a0a0a 100%);
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        <header>
+            <h1>FastKoko Level Up</h1>
+            <p>Paste text below to generate synchronized captioned audio</p>
+        </header>
+        
+        <main>
+            <textarea id="text-input" placeholder="Type or paste something for the level up treatment..."></textarea>
+            
+            <div class="controls-row">
+                <div class="control-group">
+                    <label>Voice</label>
+                    <select id="voice-select">
+                        <option value="af_bella">af_bella (F)</option>
+                        <option value="af_sky">af_sky (F)</option>
+                        <option value="am_adam">am_adam (M)</option>
+                        <option value="bf_emma">bf_emma (F)</option>
+                        <option value="bm_george">bm_george (M)</option>
+                    </select>
+                </div>
+                <div class="control-group" style="flex-grow: 1;">
+                    <label>Speed: <span id="speed-val">1.0</span>x</label>
+                    <input type="range" id="speed-slider" min="0.5" max="2.0" step="0.1" value="1.0" style="width: 100%;">
+                </div>
+                <button id="generate-btn" class="generate-btn">Generate & Play</button>
+            </div>
+
+            <div id="status" class="status-msg"></div>
+
+            <audio id="audio-player" controls style="display:none"></audio>
+            
+            <div id="caption-display" class="caption-container">
+                Generated captions will appear here and highlight in sync with the speech.
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        const textInput = document.getElementById('text-input');
+        const voiceSelect = document.getElementById('voice-select');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        const generateBtn = document.getElementById('generate-btn');
+        const audioPlayer = document.getElementById('audio-player');
+        const captionDisplay = document.getElementById('caption-display');
+        const statusMsg = document.getElementById('status');
+
+        let currentTimestamps = [];
+
+        speedSlider.oninput = () => speedVal.textContent = speedSlider.value;
+
+        async function generateCaptionedSpeech() {
+            const text = textInput.value.trim();
+            if (!text) return;
+
+            generateBtn.disabled = true;
+            statusMsg.textContent = "🚀 Processing your request...";
+            captionDisplay.style.color = '#444';
+
+            try {
+                const response = await fetch('/dev/captioned_speech', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        input: text,
+                        voice: voiceSelect.value,
+                        speed: parseFloat(speedSlider.value),
+                        response_format: 'wav',
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+
+                const data = await response.json();
+                const audioBlob = b64toBlob(data.audio, 'audio/wav');
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                currentTimestamps = data.timestamps;
+                
+                audioPlayer.src = audioUrl;
+                audioPlayer.style.display = 'block';
+                renderText(currentTimestamps);
+                
+                statusMsg.textContent = "✨ Ready to play!";
+                audioPlayer.play();
+
+            } catch (err) {
+                statusMsg.textContent = "❌ Error: " + err.message;
+                console.error(err);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        function renderText(timestamps) {
+            captionDisplay.innerHTML = '';
+            captionDisplay.style.color = '#ccc';
+            timestamps.forEach((ts, index) => {
+                const span = document.createElement('span');
+                span.className = 'word';
+                span.id = `word-${index}`;
+                span.textContent = ts.word;
+                captionDisplay.appendChild(span);
+            });
+        }
+
+        audioPlayer.ontimeupdate = () => {
+            const currentTime = audioPlayer.currentTime;
+            currentTimestamps.forEach((ts, index) => {
+                const wordEl = document.getElementById(`word-${index}`);
+                if (!wordEl) return;
+
+                if (currentTime >= ts.start_time && currentTime <= ts.end_time) {
+                    wordEl.classList.add('active');
+                    wordEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    wordEl.classList.remove('active');
+                }
+            });
+        };
+
+        function b64toBlob(b64Data, contentType = '', sliceSize = 512) {
+            const byteCharacters = atob(b64Data);
+            const byteArrays = [];
+            for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                const slice = byteCharacters.slice(offset, offset + sliceSize);
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            return new Blob(byteArrays, { type: contentType });
+        }
+
+        generateBtn.onclick = generateCaptionedSpeech;
+    </script>
+</body>
+</html>

@@ -56,23 +56,26 @@ def generate_audio_from_phonemes(phonemes: str, voice: str = "af_bella") -> Opti
     return response.content
 
 
-def main():
-    # Example texts to convert
-    examples = [
-        "Hello world! Welcome to the phoneme generation system.",
-        "How are you today? I am doing reasonably well, thank you for asking",
-        """This is a test of the phoneme generation system. Do not be alarmed.
-        This is only a test. If this were a real phoneme emergency, '
-        you would be instructed to a phoneme shelter in your area. Repeat. 
-        This is a test of the phoneme generation system. Do not be alarmed.
-        This is only a test. If this were a real phoneme emergency, '
-        you would be instructed to a phoneme shelter in your area. Repeat.
-        This is a test of the phoneme generation system. Do not be alarmed.
-        This is only a test. If this were a real phoneme emergency, '
-        you would be instructed to a phoneme shelter in your area""",
-    ]
+import sys
+import argparse
 
-    print("Generating phonemes and audio for example texts...\n")
+def main():
+    parser = argparse.ArgumentParser(description="Generate phonemes and audio from text.")
+    parser.add_argument("text", nargs="*", help="Text to convert to phonemes. If omitted, you'll be prompted.")
+    parser.add_argument("--voice", default="af_bella", help="Voice to use for audio generation (default: af_bella).")
+    args = parser.parse_args()
+
+    if args.text:
+        examples = [" ".join(args.text)]
+    else:
+        # Prompt for input if no arguments provided
+        user_input = input("Enter the text you want to convert to phonemes: ").strip()
+        if not user_input:
+            print("No text provided. Exiting.")
+            return
+        examples = [user_input]
+
+    print(f"Generating phonemes and audio using voice '{args.voice}' for: {examples[0][:50]}...\n")
 
     # Create output directory in same directory as script
     output_dir = SCRIPT_DIR / "output"
@@ -88,7 +91,7 @@ def main():
 
             # Generate audio from phonemes
             print("Generating audio...")
-            audio_bytes = generate_audio_from_phonemes(phonemes)
+            audio_bytes = generate_audio_from_phonemes(phonemes, voice=args.voice)
             
             if not audio_bytes:
                 print("Error: No audio data generated")

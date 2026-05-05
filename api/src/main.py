@@ -27,6 +27,11 @@ def setup_logger():
     if level not in valid_levels:
         level = "DEBUG"
     print(f"Global API loguru logger level: {level}")
+    
+    # Ensure log directory exists in container
+    log_file = "/app/logs/kokoro.log"
+    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    
     config = {
         "handlers": [
             {
@@ -37,6 +42,12 @@ def setup_logger():
                 "{message}",
                 "colorize": True,
                 "level": level,
+            },
+            {
+                "sink": log_file,
+                "format": "{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {module}:{line} | {message}",
+                "level": level,
+                "rotation": "10 MB",
             },
         ],
     }

@@ -1,0 +1,52 @@
+[
+  {
+    "word": "The",
+    "start_time": 0.0013749999999999873,
+    "end_time": 0.076375
+  },
+  {
+    "word": "quick",
+    "start_time": 0.076375,
+    "end_time": 0.32637499999999997
+  },
+  {
+    "word": "brown",
+    "start_time": 0.32637499999999997,
+    "end_time": 0.688875
+  },
+  {
+    "word": "fox",
+    "start_time": 0.688875,
+    "end_time": 1.2013749999999999
+  },
+  {
+    "word": "jumps",
+    "start_time": 1.2013749999999999,
+    "end_time": 1.5138749999999999
+  },
+  {
+    "word": "over",
+    "start_time": 1.5138749999999999,
+    "end_time": 1.688875
+  },
+  {
+    "word": "the",
+    "start_time": 1.688875,
+    "end_time": 1.7763749999999998
+  },
+  {
+    "word": "lazy",
+    "start_time": 1.7763749999999998,
+    "end_time": 2.151375
+  },
+  {
+    "word": "dog",
+    "start_time": 2.151375,
+    "end_time": 2.751375
+  },
+  {
+    "word": ".",
+    "start_time": 2.751375,
+    "end_time": 2.901375
+  }
+]
