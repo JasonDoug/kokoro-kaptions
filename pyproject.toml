@@ -1,9 +1,9 @@
 [project]
-name = "kokoro-fastapi"
+name = "kokoro-kaptions"
 version = "0.3.0"
 description = "FastAPI TTS Service"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.13"
 dependencies = [
     # Core dependencies
     "fastapi==0.115.6",
@@ -34,20 +34,22 @@ dependencies = [
     "espeakng-loader==0.2.4",
     "kokoro==0.9.4",
     "misaki[en,ja,ko,zh]==0.9.4",
-    "spacy==3.8.5",
+    "spacy==3.8.14",
     "en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl",
     "inflect>=7.5.0",
     "phonemizer-fork>=3.3.2",
     "av>=14.2.0",
     "text2num>=2.5.1",
+    "audioop-lts>=0.2.2",
 ]
 
 [project.optional-dependencies]
 gpu = ["torch==2.8.0+cu129"]
 cpu = ["torch==2.8.0"]
 rocm = [
-    "torch==2.8.0+rocm6.4",
+    "torch==2.11.0+rocm7.2",
     "pytorch-triton-rocm>=3.2.0",
+    "triton-rocm",
 ]
 test = [
     "pytest==8.3.5",
@@ -79,6 +81,9 @@ torch = [
 pytorch-triton-rocm = [
     { index = "pytorch-rocm", extra = "rocm" },
 ]
+triton-rocm = [
+    { index = "pytorch-rocm", extra = "rocm" },
+]
 
 [[tool.uv.index]]
 name = "pytorch-cpu"
@@ -92,7 +97,7 @@ explicit = true
 
 [[tool.uv.index]]
 name = "pytorch-rocm"
-url = "https://download.pytorch.org/whl/rocm6.4"
+url = "https://download.pytorch.org/whl/rocm7.2"
 explicit = true
 
 [tool.uv.workspace]

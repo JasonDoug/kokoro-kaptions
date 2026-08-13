@@ -1,4 +1,4 @@
-# Contributing to Kokoro-FastAPI
+# Contributing to kokoro-kaptions
 
 Always appreciate community involvement in making this project better. 
 
@@ -8,8 +8,8 @@ We use `uv` for managing Python environments and dependencies, and `ruff` for li
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/remsky/Kokoro-FastAPI.git
-    cd Kokoro-FastAPI
+    git clone https://github.com/remsky/kokoro-kaptions.git
+    cd kokoro-kaptions
     ```
 
 2.  **Install `uv`:**

@@ -78,8 +78,13 @@ class Settings(BaseSettings):
         # Auto-detect device
         if torch.backends.mps.is_available():
             return "mps"
-        elif torch.cuda.is_available():
+        
+        if torch.cuda.is_available():
+            # For ROCm, torch.version.hip will be available
+            if hasattr(torch.version, "hip") and torch.version.hip:
+                return "cuda" # PyTorch ROCm uses "cuda" as the device name
             return "cuda"
+            
         return "cpu"
 
 

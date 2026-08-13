@@ -21,10 +21,10 @@ Error generating speech: The object is in an invalid state.
 The dependency chain has changed:
 ```
 Before:
-kokoro-fastapi (phonemizer 3.3.0) -> kokoro -> misaki -> phonemizer
+kokoro-kaptions (phonemizer 3.3.0) -> kokoro -> misaki -> phonemizer
 
 After:
-kokoro-fastapi -> kokoro -> misaki -> phonemizer-fork + espeakng-loader
+kokoro-kaptions -> kokoro -> misaki -> phonemizer-fork + espeakng-loader
 ```
 
 The issue arises because:

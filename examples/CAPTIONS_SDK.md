@@ -1,6 +1,6 @@
-# Kokoro-FastAPI Captioned Speech SDK
+# kokoro-kaptions Captioned Speech SDK
 
-The Captioned Speech endpoint is a "Level Up" over standard TTS because it provides high-precision word-level timestamps alongside the audio data.
+The captioned speech endpoint is a "Level Up" over standard TTS because it provides high-precision word-level timestamps alongside the audio data.
 
 ## 1. Standard Request (Non-Streaming)
 Use this for shorter snippets of text where you can wait for the full generation before playback.

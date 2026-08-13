@@ -6,13 +6,6 @@ import psutil
 import torch
 from fastapi import APIRouter
 
-try:
-    import GPUtil
-
-    GPU_AVAILABLE = True
-except ImportError:
-    GPU_AVAILABLE = False
-
 router = APIRouter(tags=["debug"])
 
 
@@ -121,23 +114,17 @@ async def get_system_info():
             "device": "Apple Silicon",
             "backend": "Metal",
         }
-    elif GPU_AVAILABLE:
+    elif torch.cuda.is_available():
         try:
-            gpus = GPUtil.getGPUs()
             gpu_info = [
                 {
-                    "id": gpu.id,
-                    "name": gpu.name,
-                    "load": gpu.load,
+                    "id": i,
+                    "name": torch.cuda.get_device_name(i),
                     "memory": {
-                        "total": gpu.memoryTotal,
-                        "used": gpu.memoryUsed,
-                        "free": gpu.memoryFree,
-                        "percent": (gpu.memoryUsed / gpu.memoryTotal) * 100,
+                        "total_mb": torch.cuda.get_device_properties(i).total_memory / (1024**2),
                     },
-                    "temperature": gpu.temperature,
                 }
-                for gpu in gpus
+                for i in range(torch.cuda.device_count())
             ]
         except Exception:
             gpu_info = "GPU information unavailable"
@@ -192,17 +179,14 @@ async def get_session_pool_info():
         }
 
         # Add GPU memory info if available
-        if GPU_AVAILABLE:
+        if torch.cuda.is_available():
             try:
-                gpus = GPUtil.getGPUs()
-                if gpus:
-                    gpu = gpus[0]  # Assume first GPU
-                    pool_info["gpu"]["memory"] = {
-                        "total_mb": gpu.memoryTotal,
-                        "used_mb": gpu.memoryUsed,
-                        "free_mb": gpu.memoryFree,
-                        "percent_used": (gpu.memoryUsed / gpu.memoryTotal) * 100,
-                    }
+                # Use properties of first GPU as representative
+                props = torch.cuda.get_device_properties(0)
+                pool_info["gpu"]["memory"] = {
+                    "total_mb": props.total_memory / (1024**2),
+                    "name": torch.cuda.get_device_name(0),
+                }
             except Exception:
                 pass
 

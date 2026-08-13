@@ -28,9 +28,14 @@ def setup_logger():
         level = "DEBUG"
     print(f"Global API loguru logger level: {level}")
     
-    # Ensure log directory exists in container
-    log_file = "/app/logs/kokoro.log"
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    # Ensure log directory exists
+    log_file = os.getenv("API_LOG_FILE", "/app/logs/kokoro.log")
+    try:
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
+    except PermissionError:
+        # Fallback to local logs directory if /app/logs is not writable
+        log_file = "logs/kokoro.log"
+        os.makedirs(os.path.dirname(log_file), exist_ok=True)
     
     config = {
         "handlers": [
@@ -112,9 +117,9 @@ async def lifespan(app: FastAPI):
     # Add web player info if enabled
     if settings.enable_web_player:
         startup_msg += (
-            f"\n\nBeta Web Player: http://{settings.host}:{settings.port}/web/"
+            f"\n\nBeta Web Player: http://{settings.host}:{settings.port}/web/captions.html"
         )
-        startup_msg += f"\nor http://localhost:{settings.port}/web/"
+        startup_msg += f"\nor http://localhost:{settings.port}/web/captions.html"
     else:
         startup_msg += "\n\nWeb Player: disabled"
 

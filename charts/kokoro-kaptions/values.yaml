@@ -1,10 +1,10 @@
-# Default values for kokoro-fastapi.
+# Default values for kokoro-kaptions.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 kokoroTTS:
   replicaCount: 1
   # The name of the deployment repository
-  repository: "ghcr.io/remsky/kokoro-fastapi-gpu"
+  repository: "ghcr.io/remsky/kokoro-kaptions-gpu"
   imagePullSecrets: [] # Set if using a private image or getting rate limited
   tag: "latest"
   pullPolicy: Always

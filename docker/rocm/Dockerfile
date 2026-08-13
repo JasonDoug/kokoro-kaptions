@@ -46,21 +46,21 @@ ENV PHONEMIZER_ESPEAK_PATH=/usr/bin \
 
 # Install dependencies with GPU extras (using cache mounts)
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv venv --python 3.12 && \
+    uv venv --python 3.13 && \
     uv sync --extra rocm
 
 # Run kdb files (shape files for MIOpen)
-ENV ROCM_VERSION=6.4.4
+ENV ROCM_VERSION=7.2.3
 COPY --chown=appuser:appuser docker/rocm/kdb_install.sh /tmp/
 RUN /tmp/kdb_install.sh
 
 # Support older GFX Arch
-ENV ROCBLAS_VERSION=6.4.4-1
+ENV ROCBLAS_VERSION=7.2.3-1
 RUN cd /tmp && wget https://archive.archlinux.org/packages/r/rocblas/rocblas-${ROCBLAS_VERSION}-x86_64.pkg.tar.zst -O rocblas.tar.zst \
     && pwd && ls -lah ./ \
     && tar --zstd -xvf rocblas.tar.zst && rm rocblas.tar.zst \
-    && rm -rf /app/.venv/lib/python3.12/site-packages/torch/lib/rocblas/library/ \
-    && mv ./opt/rocm/lib/rocblas/library/ /app/.venv/lib/python3.12/site-packages/torch/lib/rocblas/
+    && rm -rf /app/.venv/lib/python3.13/site-packages/torch/lib/rocblas/library/ \
+    && mv ./opt/rocm/lib/rocblas/library/ /app/.venv/lib/python3.13/site-packages/torch/lib/rocblas/
 
 # Copy project files including models
 COPY --chown=appuser:appuser api ./api

@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to this project will be documented in this file.
+Notable changes to kokoro-kaptions will be documented in this file.
 
 ## [v0.3.0] - 2025-04-04
 ### Added
